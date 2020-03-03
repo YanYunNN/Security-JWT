@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: jwt-security
+  profiles:
+  mvc:
+    async:
+      request-timeout: 30000
+  datasource:
+    url: jdbc:mysql://localhost:3306/jwt?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8082
