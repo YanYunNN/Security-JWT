@@ -1,4 +1,4 @@
-package com.cloume.jwtsecurity.security;
+package com.cloume.jwtsecurity.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

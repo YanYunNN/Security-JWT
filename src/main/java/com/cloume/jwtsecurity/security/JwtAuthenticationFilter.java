@@ -1,6 +1,7 @@
 package com.cloume.jwtsecurity.security;
 
 import com.cloume.commons.rest.response.RestResponse;
+import com.cloume.jwtsecurity.service.impl.UserServiceImpl;
 import com.cloume.jwtsecurity.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -16,21 +17,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 //处理登入操作
 @Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-
-    private AuthenticationManager authenticationManager;
-
     /**
      * 登录鉴权
      * POST/auth/login
      * @param authenticationManager
      */
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
         super.setFilterProcessesUrl("/auth/login");
+        setAuthenticationManager(authenticationManager);
     }
 
     @Override
@@ -39,10 +39,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-        //设置一些客户IP信息，后面可能用到
-        setDetails(request, token);
         // 交给 AuthenticationManager 进行鉴权
-        return authenticationManager.authenticate(token);
+        return getAuthenticationManager().authenticate(token);
     }
 
     /*
@@ -62,18 +60,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         logger.info(request.getParameter("username") + "登陆失败");
     }
 
-    private RestResponse<?> handleResponse(HttpServletRequest request, HttpServletResponse response, Authentication authResult, AuthenticationException failed) throws IOException, ServletException {
+    private void handleResponse(HttpServletRequest request, HttpServletResponse response, Authentication authResult, AuthenticationException failed) throws IOException, ServletException {
         ObjectMapper mapper = new ObjectMapper();
         response.setHeader("Content-Type", "application/json;charset=UTF-8");
         if (authResult != null) {
             // 处理登入成功请求
+            //TODO User获取不到
             User user = (User) authResult.getPrincipal();
             String token = JwtUtil.sign(user.getUsername(), user.getPassword());
             logger.info(user.getUsername() + "登陆成功");
-            return RestResponse.good(token);
+            Map<String, Object> res = new HashMap<>();
+            res.put("token", token);
+            res.put("user", user);
+            response.getWriter().write(mapper.writeValueAsString(RestResponse.good(res)));
         } else {
             // 处理登入失败请求
-            return RestResponse.good("用户名或密码错误");
+            response.getWriter().write(mapper.writeValueAsString(RestResponse.bad(-1, "用户名或密码错误")));
         }
     }
 }
