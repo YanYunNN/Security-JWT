@@ -3,6 +3,7 @@ package com.cloume.jwtsecurity.security;
 import com.cloume.commons.rest.response.RestResponse;
 import com.cloume.jwtsecurity.service.impl.UserServiceImpl;
 import com.cloume.jwtsecurity.util.JwtUtil;
+import com.cloume.jwtsecurity.util.SpringContextUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ import java.util.Map;
 //处理登入操作
 @Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
     /**
      * 登录鉴权
      * POST/auth/login
@@ -65,12 +67,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setHeader("Content-Type", "application/json;charset=UTF-8");
         if (authResult != null) {
             // 处理登入成功请求
-            //TODO User获取不到
             User user = (User) authResult.getPrincipal();
-            String token = JwtUtil.sign(user.getUsername(), user.getPassword());
+
+            //TODO User.getPassword()获取不到临时方案
+            final Map<String, UserServiceImpl> userDetailsServices = SpringContextUtil.getApplicationContext().getBeansOfType(UserServiceImpl.class);
+            UserServiceImpl userService = (UserServiceImpl) userDetailsServices.values().toArray()[0];
+            String password = userService.findByUsername(user.getUsername()).getPassword();
+
+            String token = JwtUtil.sign(user.getUsername(), password);
             logger.info(user.getUsername() + "登陆成功");
             Map<String, Object> res = new HashMap<>();
-            res.put("token", token);
+            res.put("token", JwtUtil.TOKEN_PREFIX + token);
             res.put("user", user);
             response.getWriter().write(mapper.writeValueAsString(RestResponse.good(res)));
         } else {

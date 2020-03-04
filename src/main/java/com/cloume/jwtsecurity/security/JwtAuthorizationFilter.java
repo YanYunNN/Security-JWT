@@ -2,6 +2,7 @@ package com.cloume.jwtsecurity.security;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.cloume.jwtsecurity.util.JwtUtil;
+import com.cloume.jwtsecurity.util.SpringContextUtil;
 import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,20 +14,24 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 //处理每个请求鉴权
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-    @Autowired
+    @Resource
     MyUserDetailsService userDetailsService;
 
     // 会从 Spring Security 配置文件那里传过来
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
+        final Map<String, MyUserDetailsService> userDetailsServices = SpringContextUtil.getApplicationContext().getBeansOfType(MyUserDetailsService.class);
+        this.userDetailsService = (MyUserDetailsService) userDetailsServices.values().toArray()[0];
     }
 
     @Override

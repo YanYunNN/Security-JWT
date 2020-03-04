@@ -10,10 +10,12 @@ import java.util.Date;
 
 public class JwtUtil {
 
+
     // 过期时间30分钟
     private final static long EXPIRE_TIME = 30 * 60 * 1000;
     public static final String TOKEN_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String TOKEN_SECRET = "jwtsecretdemo";
 
     /**
      * 生成签名,30min后过期
