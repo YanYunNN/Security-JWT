@@ -14,7 +14,7 @@ import java.time.ZoneOffset;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class PsyApiApplicationTests {
+public class Tests {
     @Test
     public void addUser() {
         User addUser = new User();

@@ -24,7 +24,6 @@ public class UserController {
 
     /**
      * 获取用户列表
-     * priority参数false，如果是特权卡列表要加个true
      */
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/list")
