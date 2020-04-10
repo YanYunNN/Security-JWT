@@ -1,69 +1,31 @@
-# 心理学院会议室预约系统 API 接口文档
+# SpringSecurity整合JWT实践
 
 
-## 一、接口统一规约
-在前后端分离的程序架构下，前后端交互一般是由前端通过`HTTP协议`访问后端提供的`Restful`风格的`API`进行的。在这种场景下，常用的`HTTP方法`主要包括：`GET`、`PUT`、`POST`和`DELETE`。
-### 1. GET 
-`GET`方法用于获取资源详情或者列表，不对资源做变更。其一般使用场景如下：
-1. 获取某个资源的详情：`/resourceName/{id}`，`Path Variable`中的`id`即为要获取的那个资源的唯一`id`
-   
-    特别的，当要获取当前登录用户的详情时，由于后端的`Security Context`中知道当前用户是谁，所以一般直接使用：`/user` 即可。
+## 一、为什么使用JWT
 
-2. 分页获取某种资源列表：`/resourceName/list?page=xxx&size=xxx`
+CSRF 攻击：
+适合移动应用：
+Cookie+Session的鉴权方式中，鉴权数据（cookie 
+中的 session_id）是由浏览器自动携带发送到服务移动端上不支持 cookie，而 token 只
+端的，借助这个特性，攻击者就可以通过让用户误点要客户端能够进行存储就能够使用，因
+攻击链接，比如偷梁换柱地将转账对象B改成黑客C，
+此 token 在移动端上也具有优势。
+这样用户A就会发现自己的钱进了C的口袋。
+token是开发者为了防范csrf而特别设计的令牌，浏
+览器不会自动添加到headers里，攻击者也无法访问
+用户的token，所以提交的表单无法通过服务器验证
 
-    `page`指当前的页码，`size`指每一页的资源数量，同样的，可以增加其他`Query String`参数以实现例如下拉筛选和模糊查找等功能。
+## 二、什么是JWT
+JWT(JSON Web Token) 是一个开放标准(RFC 7519)，它定义了一种紧凑的、自包含的方式，用于作为
+JSON对象在各方之间安全地传输信息。该信息可以被验证和信任，可直接被用于认证，也可被加密
 
-### 2. PUT
-`PUT`方法用于新增（添加）某个资源。新增的资源数据一般放在`RequestBody`中提交给后端。
+## 三、怎么用JWT
+auth0的Jwt签名方法
+Bearer 
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9
+.eyJleHAiOjE1ODY0Mjg2NjMsInVzZXJuYW1lIjoiMTAwMyJ9
+.q-C2nOHpF5u3ah20mT2YGalHC6lt2-dw5umJvZi-2vI
 
-### 3. POST
-`POST`方法用于对某个资源进行修改（更新）。需要更新的数据一般放在`RequestBody`中提交给后端。
-
-### 4. DELETE
-`DELETE`方法用于删除某个资源。一般用法是：`/resourceName/{id}`，同样的，`Path Variable`中的`id`即为要删除的那个资源的唯一`id`。
-
-
-## 二、接口定义
-
-### 1. 登陆接口
-    接口地址：`/user/login`
-
-    方法：`POST`
-
-    参数说明：password经过md5后上传
-
-`request-body`
-```json
-{
-	"username":"admin", 
-	"password":"e10adc3949ba59abbe56e057f20f883e"
-}
-```
-`response-body`
-```json
-{
-    "code": 0,
-    "message": "OK",
-    "result": {
-        "intentProvince": null,
-        "roles": [
-            "ROLE_ADMINISTRATOR"
-        ],
-        "mobile": "110",
-        "type": [
-            "system"
-        ],
-        "title": null,
-        "nativeProvince": null,
-        "name": "超级管理员",
-        "id": 17,
-        "department": null,
-        "job": null,
-        "nativeCity": null,
-        "email": null,
-        "username": "admin"
-    }
-}
-```
-
-```
+## 四、JWT其他用法
+1.单端登录
+2.Remember Me
