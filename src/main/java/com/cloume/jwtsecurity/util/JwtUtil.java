@@ -50,7 +50,7 @@ public class JwtUtil {
             DecodedJWT jwt = verifier.verify(token);
             return true;
         } catch (Exception e) {
-            return false;
+            throw e;
         }
     }
 

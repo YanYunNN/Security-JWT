@@ -68,7 +68,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 return null;
             }
         } catch (TokenExpiredException e) {
-            logger.error("token过期！");
+            logger.error("token过期:" + e.getMessage());
             return null;
         }
         return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
