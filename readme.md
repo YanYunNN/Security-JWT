@@ -29,3 +29,48 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9
 ## 四、JWT其他用法
 1.单端登录
 2.Remember Me
+
+## 项目结构
+~~~~
+└─jwtsecurity
+    │  JwtSecurityApplication.java
+    │  ServletInitializer.java
+    │  
+    ├─config
+    │      WebConfiguration.java
+    │      
+    ├─controller
+    │      UserController.java
+    │      
+    ├─exception
+    │      JWTAccessDeniedHandler.java
+    │      JWTAuthenticationEntryPoint.java
+    │      
+    ├─model
+    │      Role.java
+    │      User.java
+    │      UserRole.java
+    │      
+    ├─repository
+    │      RoleRepository.java
+    │      UserRepository.java
+    │      UserRoleRepository.java
+    │      
+    ├─security
+    │      CustomedFilters.java
+    │      JwtAuthenticationFilter.java
+    │      JwtAuthorizationFilter.java
+    │      MyUserDetailsService.java
+    │      
+    ├─service
+    │  │  IUserService.java
+    │  │  
+    │  └─impl
+    │          UserServiceImpl.java
+    │          
+    └─util
+            Consts.java
+            JwtUtil.java
+            SpringContextUtil.java
+            
+~~~~
