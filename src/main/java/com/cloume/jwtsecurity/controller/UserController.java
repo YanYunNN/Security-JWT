@@ -25,7 +25,7 @@ public class UserController {
     /**
      * 获取用户列表
      */
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/list")
     public RestResponse<?> list(@RequestParam(value = "name", defaultValue = "") String name,
                                 @RequestParam(value = "page", defaultValue = "0") int page,

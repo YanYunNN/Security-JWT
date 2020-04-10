@@ -20,6 +20,7 @@ public class JWTAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
         response.setContentType("application/json; charset=utf-8");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
         response.getWriter().write(new ObjectMapper().writeValueAsString(RestResponse.bad(HttpServletResponse.SC_FORBIDDEN, "当前用户没有访问权限")));
     }
 }

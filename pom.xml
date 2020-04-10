@@ -14,10 +14,6 @@
     <packaging>war</packaging>
     <name>jwt-security</name>
     <description>Demo project for Spring Boot</description>
-    <properties>
-        <java.version>1.8</java.version>
-        <weixin-java-miniapp.version>3.5.0</weixin-java-miniapp.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

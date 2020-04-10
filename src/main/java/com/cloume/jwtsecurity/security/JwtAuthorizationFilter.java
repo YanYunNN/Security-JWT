@@ -24,14 +24,13 @@ import java.util.Map;
 
 //处理每个请求鉴权
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-    @Resource
-    MyUserDetailsService userDetailsService;
+    final MyUserDetailsService userDetailsService;
 
-    // 会从 Spring Security 配置文件那里传过来
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
+
         final Map<String, MyUserDetailsService> userDetailsServices = SpringContextUtil.getApplicationContext().getBeansOfType(MyUserDetailsService.class);
-        this.userDetailsService = (MyUserDetailsService) userDetailsServices.values().toArray()[0];
+        userDetailsService = (MyUserDetailsService) userDetailsServices.values().toArray()[0];
     }
 
     @Override
@@ -57,14 +56,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         // 如果请求头中有token，且用户名存在，则进行解析，并且设置认证信息
         String token = header.split(" ")[1];
         String username = JwtUtil.getUsername(token);
-        UserDetails userDetails = null;
+        UserDetails user = null;
         try {
-            userDetails = userDetailsService.loadUserByUsername(username);
+            user = userDetailsService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
             return null;
         }
         try {
-            boolean verify = JwtUtil.verify(token, username, userDetails.getPassword());
+            boolean verify = JwtUtil.verify(token, username, user.getPassword());
             if (verify == false) {
                 return null;
             }
@@ -72,6 +71,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             logger.error("token过期！");
             return null;
         }
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 }

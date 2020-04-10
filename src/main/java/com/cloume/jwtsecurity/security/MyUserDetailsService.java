@@ -27,6 +27,13 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRoleRepository userRoleRepository;
 
+
+    /**
+     * 返回带角色信息的User
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.findByUsername(username);
@@ -34,7 +41,6 @@ public class MyUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(String.format("No user found with username: %s", username));
         }
         List<GrantedAuthority> authorities = new ArrayList<>();
-        //根据角色权限关联表
         List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
         for (UserRole userRole : userRoles) {
             Role role = roleRepository.findByIdEquals(userRole.getRoleId());

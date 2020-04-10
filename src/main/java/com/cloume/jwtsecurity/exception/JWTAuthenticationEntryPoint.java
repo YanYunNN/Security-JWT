@@ -16,12 +16,10 @@ import java.io.IOException;
  */
 public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request,
-                         HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setContentType("application/json; charset=utf-8");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.getWriter().write(new ObjectMapper().writeValueAsString(RestResponse.bad(HttpServletResponse.SC_FORBIDDEN, "当前用户没有携带token或者token无效")));
 
+        response.getWriter().write(new ObjectMapper().writeValueAsString(RestResponse.bad(HttpServletResponse.SC_FORBIDDEN, "当前用户没有携带token或者token无效")));
     }
 }
